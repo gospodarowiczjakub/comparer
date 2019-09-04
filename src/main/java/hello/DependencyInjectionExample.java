@@ -13,6 +13,7 @@ public class DependencyInjectionExample {
     }
 
     public String getHelloValue(){
+        appConfiguration.getFileConfiguration().getFileName();
         return appConfiguration.getHelloValue();
     }
 }
