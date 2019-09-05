@@ -1,21 +1,19 @@
-package hello.config;
+package hello.config.db;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
 @Configuration
 @PropertySource({"classpath:config-dev.properties", "classpath:config-${spring.profiles.active}.properties"})
-public class MFSDatabaseProperties implements DatabaseProperties {
-    @Value("${db.mfs.connection_string}")
+public class ZevigDatabaseProperties implements DatabaseProperties {
+    @Value("${db.zevig.connection_string}")
     private String url;
 
-    @Value("${db.mfs.user}")
+    @Value("${db.zevig.user}")
     private String username;
 
-    @Value("${db.mfs.password}")
+    @Value("${db.zevig.password}")
     private String password;
 
     @Override

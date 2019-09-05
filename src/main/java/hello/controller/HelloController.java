@@ -1,4 +1,4 @@
-package hello.config.controller;
+package hello.controller;
 
 import hello.DependencyInjectionExample;
 import hello.config.FileConfiguration;

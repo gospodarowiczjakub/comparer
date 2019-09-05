@@ -1,5 +1,8 @@
 package hello.config;
 
+import hello.config.db.MFSDatabaseProperties;
+import hello.config.db.WmConfigDatabaseProperties;
+import hello.config.db.ZevigDatabaseProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,9 +48,6 @@ public class AppConfiguration {
     public String getHelloValue() {
         return fileConfiguration.getFileName()+mfsDatabaseProperties.getUrl() + zevigDatabaseProperties.getUrl() + wmConfigDatabaseProperties.getUrl();
     }
-
-
-
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev(){

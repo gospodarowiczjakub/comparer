@@ -1,4 +1,4 @@
-package hello.config;
+package hello.config.db;
 
 import org.springframework.stereotype.Repository;
 

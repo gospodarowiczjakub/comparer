@@ -1,9 +1,8 @@
-package hello.config;
+package hello.config.db;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @PropertySource({"classpath:config-dev.properties", "classpath:config-${spring.profiles.active}.properties"})
