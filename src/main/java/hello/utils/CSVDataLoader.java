@@ -15,7 +15,7 @@ import java.util.List;
 public class CSVDataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataLoader.class);
     private static final char COLUMN_SEPARATOR = ';';
-    
+
     public <T> List<T> loadObjectList(Class<T> type, String filename) {
         try {
             CsvSchema bootstrapSchema = CsvSchema.builder()

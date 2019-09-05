@@ -29,15 +29,12 @@ public class AppConfiguration {
         return fileConfiguration;
     }
 
-    @Autowired
     private ZevigDatabaseProperties zevigDatabaseProperties;
-    @Autowired
     private MFSDatabaseProperties mfsDatabaseProperties;
-    @Autowired
     private WmConfigDatabaseProperties wmConfigDatabaseProperties;
-    @Autowired
     private FileConfiguration fileConfiguration;
 
+    @Autowired
     public AppConfiguration(ZevigDatabaseProperties zdp, MFSDatabaseProperties mdp, WmConfigDatabaseProperties wdp, FileConfiguration fc) {
         this.wmConfigDatabaseProperties=wdp;
         this.zevigDatabaseProperties=zdp;
