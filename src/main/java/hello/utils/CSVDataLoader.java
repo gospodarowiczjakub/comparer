@@ -14,17 +14,25 @@ import java.util.List;
 
 public class CSVDataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataLoader.class);
-
-    public <T> List<T> loadObjectList(Class<T> type, String filename){
-        try{
-            CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader();
+    private static final char COLUMN_SEPARATOR = ';';
+    
+    public <T> List<T> loadObjectList(Class<T> type, String filename) {
+        try {
+            CsvSchema bootstrapSchema = CsvSchema.builder()
+                    .addColumn("claimNumber")
+                    .addColumn("epsNumber")
+                    .addColumn("attachmentNumber")
+                    .addColumn("attachmentName")
+                    .addColumn("sent")
+                    .setColumnSeparator(COLUMN_SEPARATOR)
+                    .build();
             CsvMapper mapper = new CsvMapper();
 
             File file = new ClassPathResource(filename).getFile();
-            MappingIterator<T> readValues = mapper.reader(type).with(bootstrapSchema).readValues(file);
+            MappingIterator<T> readValues = mapper.readerFor(type).with(bootstrapSchema).readValues(file);
             return readValues.readAll();
 
-        } catch(Exception e){
+        } catch (Exception e) {
             LOGGER.error("Error while loading {} file: {}", filename, e.toString());
             return Collections.emptyList();
         }
