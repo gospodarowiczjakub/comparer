@@ -5,10 +5,12 @@ import hello.config.AppConfiguration;
 import hello.config.FileConfiguration;
 import hello.jdbc.*;
 import hello.model.EPSClaim;
+import hello.model.StorageFileRepository;
 import hello.utils.CSVDataLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 @RestController
@@ -31,6 +32,9 @@ public class HelloController {
     private FileConfiguration fileConfiguration;
     @Autowired
     private AppConfiguration appConfiguration;
+    @Qualifier("namedParameterJdbcStorageFileRepository")
+    private StorageFileRepository storageFileRepository;
+
 
     public HelloController(DependencyInjectionExample dependencyInjectionExample) {
         this.dependencyInjectionExample = dependencyInjectionExample;
@@ -71,15 +75,5 @@ public class HelloController {
     }
 
 
-    public DataSource dataSource() throws CannotGetJdbcConnectionException {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
-        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        dataSource.setUsername(appConfiguration.getMfsDatabaseProperties().getUsername());
-        dataSource.setPassword(appConfiguration.getMfsDatabaseProperties().getPassword());
-        dataSource.setUrl(appConfiguration.getMfsDatabaseProperties().getUrl());
-
-        return dataSource;
-    }
 
 }

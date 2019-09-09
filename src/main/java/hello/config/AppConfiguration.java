@@ -7,8 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @PropertySource({"classpath:config-dev.properties", "classpath:config-${spring.profiles.active}.properties"})
@@ -52,5 +57,31 @@ public class AppConfiguration {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev(){
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public JdbcTemplate setJdbcTemplate(){
+
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        dataSource.setUsername(this.getMfsDatabaseProperties().getUsername());
+        dataSource.setPassword(this.getMfsDatabaseProperties().getPassword());
+        dataSource.setUrl(this.getMfsDatabaseProperties().getUrl());
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate;
+    }
+
+    @Bean
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        dataSource.setUsername(this.getMfsDatabaseProperties().getUsername());
+        dataSource.setPassword(this.getMfsDatabaseProperties().getPassword());
+        dataSource.setUrl(this.getMfsDatabaseProperties().getUrl());
+
+
+        return new NamedParameterJdbcTemplate(dataSource);
     }
 }
