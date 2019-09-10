@@ -1,6 +1,6 @@
 package hello.model;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 public class EPSClaim {
     public String claimNumber;
@@ -10,11 +10,11 @@ public class EPSClaim {
     public String sent;
 
 
-    public EPSClaim(@JsonProperty("claimNumber")    String claimNumber,
-                    @JsonProperty("epsNumber")      String epsNumber,
-                    @JsonProperty("attachmentNumber")String attachmentNumber,
-                    @JsonProperty("attachmentName")String attachmentName,
-                    @JsonProperty("sent")String sent) {
+    public EPSClaim(@JsonProperty("claimNumber") String claimNumber,
+                    @JsonProperty("epsNumber") String epsNumber,
+                    @JsonProperty("attachmentNumber") String attachmentNumber,
+                    @JsonProperty("attachmentName") String attachmentName,
+                    @JsonProperty("sent") String sent) {
         this.claimNumber = claimNumber;
         this.epsNumber = epsNumber;
         this.attachmentNumber = attachmentNumber;

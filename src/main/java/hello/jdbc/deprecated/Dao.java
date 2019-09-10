@@ -1,4 +1,4 @@
-package hello.jdbc;
+package hello.jdbc.deprecated;
 
 import java.util.List;
 import java.util.Optional;

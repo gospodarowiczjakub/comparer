@@ -1,5 +1,6 @@
-package hello.model;
+package hello.model.db;
 
+import hello.model.DomainValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcStorageFileRepository implements StorageFileRepository{
+public class JdbcStorageFileRepository implements StorageFileRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -20,12 +21,12 @@ public class JdbcStorageFileRepository implements StorageFileRepository{
     }
 
     @Override
-    public int save(StorageFile StorageFile) {
+    public int save(DomainValue DomainValue) {
         return 0;
     }
 
     @Override
-    public int update(StorageFile StorageFile) {
+    public int update(DomainValue DomainValue) {
         return 0;
     }
 
@@ -35,22 +36,22 @@ public class JdbcStorageFileRepository implements StorageFileRepository{
     }
 
     @Override
-    public List<StorageFile> findAll() {
+    public List<DomainValue> findAll() {
         return null;
     }
 
     @Override
-    public List<StorageFile> findByNameAndPrice(String name, BigDecimal price) {
+    public List<DomainValue> findByNameAndPrice(String name, BigDecimal price) {
         return null;
     }
 
     @Override
-    public Optional<StorageFile> findById(Long ValueInt) {
+    public Optional<DomainValue> findById(Long ValueInt) {
         return jdbcTemplate.queryForObject(
                 "select * from [dbo].[FileStorage_DomainValueXREF] where ValueInt = ?",
                 new Object[]{ValueInt},
                 (rs, rowNum) ->
-                        Optional.of(new StorageFile(
+                        Optional.of(new DomainValue(
                                 rs.getString("ValueInt")
                         ))
         );

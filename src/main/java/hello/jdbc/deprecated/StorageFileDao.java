@@ -1,12 +1,7 @@
-package hello.jdbc;
-
-import hello.model.StorageFile;
+package hello.jdbc.deprecated;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 public class StorageFileDao implements Dao<StorageFileDao> {
 

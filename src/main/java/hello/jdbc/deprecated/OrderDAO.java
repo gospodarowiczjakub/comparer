@@ -1,4 +1,4 @@
-package hello.jdbc;
+package hello.jdbc.deprecated;
 
 import hello.model.Order;
 
