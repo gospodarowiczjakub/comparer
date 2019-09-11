@@ -1,12 +1,14 @@
 package hello.model.db;
 
 import hello.model.DomainValue;
+import hello.model.Lead;
+import hello.model.Order;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface StorageFileRepository {
+public interface DataRepository {
 
     int count();
 
@@ -20,7 +22,11 @@ public interface StorageFileRepository {
 
     List<DomainValue> findByNameAndPrice(String name, BigDecimal price);
 
-    Optional<DomainValue> findById(Long id);
+    List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber);
+
+    List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderId);
+
+    List<Optional<DomainValue>> findById(String id);
 
     String getNameById(Long id);
 

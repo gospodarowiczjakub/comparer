@@ -1,6 +1,8 @@
 package hello.model.db;
 
 import hello.model.DomainValue;
+import hello.model.Lead;
+import hello.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcStorageFileRepository implements StorageFileRepository {
+public class JdbcDataRepository implements DataRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -46,15 +48,21 @@ public class JdbcStorageFileRepository implements StorageFileRepository {
     }
 
     @Override
-    public Optional<DomainValue> findById(Long ValueInt) {
-        return jdbcTemplate.queryForObject(
+    public List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber) {
+        return null;
+    }
+
+    @Override
+    public List<Optional<DomainValue>> findById(String ValueInt) {
+/*        return jdbcTemplate.queryForObject(
                 "select * from [dbo].[FileStorage_DomainValueXREF] where ValueInt = ?",
                 new Object[]{ValueInt},
                 (rs, rowNum) ->
                         Optional.of(new DomainValue(
                                 rs.getString("ValueInt")
                         ))
-        );
+        );*/
+        return null;
     }
 
     @Override
@@ -62,4 +70,8 @@ public class JdbcStorageFileRepository implements StorageFileRepository {
         return null;
     }
 
+    @Override
+    public List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderId){
+        return null;
+    }
 }

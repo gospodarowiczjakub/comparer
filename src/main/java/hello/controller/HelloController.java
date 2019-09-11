@@ -3,10 +3,15 @@ package hello.controller;
 import hello.DependencyInjectionExample;
 import hello.config.AppConfiguration;
 import hello.config.FileConfiguration;
-import hello.jdbc.*;
-import hello.model.EPSClaim;
+import hello.jdbc.ConnectionFactory;
+import hello.jdbc.MfsConfigConnection;
+import hello.jdbc.WmConfigConnection;
+import hello.jdbc.ZevigConfigConnection;
 import hello.model.DomainValue;
-import hello.model.db.StorageFileRepository;
+import hello.model.EPSClaim;
+import hello.model.Lead;
+import hello.model.Order;
+import hello.model.db.DataRepository;
 import hello.utils.CSVDataLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +35,8 @@ public class HelloController {
     @Autowired
     private AppConfiguration appConfiguration;
     @Autowired
-    @Qualifier("namedParameterJdbcStorageFileRepository")
-    private StorageFileRepository storageFileRepository;
+    @Qualifier("namedParameterJdbcDataRepository")
+    private DataRepository dataRepository;
 
     public HelloController(DependencyInjectionExample dependencyInjectionExample) {
         this.dependencyInjectionExample = dependencyInjectionExample;
@@ -42,26 +47,33 @@ public class HelloController {
 
         Connection conn = connectToDbs(null);
 
-        //JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
+        List<Optional<DomainValue>> dom = dataRepository.findById("");
+        for (Optional<DomainValue> d : dom)
+            d.ifPresent(storageFile -> {
+                System.out.println("Storage file" + storageFile.toString());
+            });
 
-        int test;
-        //test = jdbcTemplate.queryForInt("select count(*) from FileStorage_Domain");
-        Optional<DomainValue> opt = storageFileRepository.findById(3428886L);
+        List<Optional<Order>> order = dataRepository.findByClaimCaseNumber("");
+        for (Optional<Order> o : order)
+            o.ifPresent(ord -> {
+                System.out.println("OrderId: " + ord.toString());
+            });
 
-        opt.ifPresent(storageFile -> {
-            System.out.println("Storage fie ValueInt= " + storageFile.getValueInt() );
-        });
-            return dependencyInjectionExample.getHelloValue();
+        List<Optional<Lead>> lead = dataRepository.findByEkspertyzaOrderId("");
+        for (Optional<Lead> l : lead)
+            l.ifPresent(res -> {
+                System.out.println("EPSLead: " + res.toString());
+            });
+
+        return dependencyInjectionExample.getHelloValue();
     }
 
-    @RequestMapping("/import")
-    public String importCSV(){
+    public String importCSV() {
         CSVDataLoader csvDataLoader = new CSVDataLoader();
         List<EPSClaim> claims = csvDataLoader.loadObjectList(EPSClaim.class, fileConfiguration.getFileName());
 
         return claims.get(0).getAttachmentName();
     }
-
 
     public Connection connectToDbs(ConnectionFactory connectionFactory) throws SQLException {
 
@@ -78,10 +90,8 @@ public class HelloController {
         LOGGER.info(": " + mfsConn.isClosed());
         LOGGER.info(": " + zevigConn.isClosed());
 
-
         return mfsConn;
     }
-
 
 
 }

@@ -1,14 +1,13 @@
 package hello.config;
 
+import hello.config.db.DatabaseProperties;
 import hello.config.db.MFSDatabaseProperties;
 import hello.config.db.WmConfigDatabaseProperties;
 import hello.config.db.ZevigDatabaseProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,6 +72,7 @@ public class AppConfiguration {
     }
 
     @Bean
+    @Qualifier("mfsJdbcTemplate")
     public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
@@ -80,6 +80,34 @@ public class AppConfiguration {
         dataSource.setUsername(this.getMfsDatabaseProperties().getUsername());
         dataSource.setPassword(this.getMfsDatabaseProperties().getPassword());
         dataSource.setUrl(this.getMfsDatabaseProperties().getUrl());
+
+
+        return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Bean
+    @Qualifier("wmConfigJdbcTemplate")
+    public NamedParameterJdbcTemplate getWmConfigJdbcTemplate(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        dataSource.setUsername(this.getWmConfigDatabaseProperties().getUsername());
+        dataSource.setPassword(this.getWmConfigDatabaseProperties().getPassword());
+        dataSource.setUrl(this.getWmConfigDatabaseProperties().getUrl());
+
+
+        return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Bean
+    @Qualifier("zevigJdbcTemplate")
+    public NamedParameterJdbcTemplate geZevigJdbcTemplate(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        dataSource.setUsername(this.getZevigDatabaseProperties().getUsername());
+        dataSource.setPassword(this.getZevigDatabaseProperties().getPassword());
+        dataSource.setUrl(this.getZevigDatabaseProperties().getUrl());
 
 
         return new NamedParameterJdbcTemplate(dataSource);

@@ -1,62 +1,34 @@
 package hello.model;
 
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "FileStorage_DomainValueXREF")
 public class DomainValue {
-    private String DomainId;
-    private String ValueText;
-    private String ValueInt;
-    private String FileId;
+    //@Value("FILEID")
+    private String fileId;
+   // @Value("NAME")
+    private String name;
 
-
-    public DomainValue(String valueInt) {
-        ValueInt = valueInt;
+    public DomainValue(String fileId, String name, String valueInt) {
+        this.fileId = fileId;
+        this.name = name;
+        this.valueInt = valueInt;
     }
 
-    public String getDomainId() {
-
-        return DomainId;
-    }
-
-    public void setDomainId(String domainId) {
-        DomainId = domainId;
-    }
-
-    public String getValueText() {
-        return ValueText;
-    }
-
-    public void setValueText(String valueText) {
-        ValueText = valueText;
-    }
-
-    public String getFileId() {
-        return FileId;
-    }
-
-    public void setFileId(String fileId) {
-        FileId = fileId;
-    }
-
-    public String getValueInt() {
-        return ValueInt;
-    }
-
-    public void setValueInt(String valueInt) {
-        ValueInt = valueInt;
-    }
+    //@Value("VALUEINT")
+    private String valueInt;
 
     @Override
     public String toString() {
         return "DomainValue{" +
-                "DomainId='" + DomainId + '\'' +
-                ", ValueText='" + ValueText + '\'' +
-                ", ValueInt='" + ValueInt + '\'' +
-                ", FileId='" + FileId + '\'' +
+                "fileId='" + fileId + '\'' +
+                ", name='" + name + '\'' +
+                ", valueInt='" + valueInt + '\'' +
                 '}';
     }
 }
