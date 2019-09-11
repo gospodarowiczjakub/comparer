@@ -3,7 +3,6 @@ package hello.model.db;
 import hello.model.DomainValue;
 import hello.model.Lead;
 import hello.model.Order;
-import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,13 +28,13 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
 
     //TODO change to return list
     @Override
-    public List<Optional<DomainValue>> findById(String ValueInt){
+    public List<Optional<DomainValue>> findById(String ValueInt) {
         return mfsJdbcTemplate.query(
-          "SELECT FF.FILEID, NAME, VALUEINT " +
-                  "FROM FILESTORAGE_FILE FF, FILESTORAGE_DOMAINVALUEXREF FD " +
-                  "WHERE FF.FILEID = FD.FILEID " +
-                  "AND FD.VALUEINT = :ValueInt",
-          new MapSqlParameterSource("ValueInt", ValueInt),
+                "SELECT FF.FILEID, NAME, VALUEINT " +
+                        "FROM FILESTORAGE_FILE FF, FILESTORAGE_DOMAINVALUEXREF FD " +
+                        "WHERE FF.FILEID = FD.FILEID " +
+                        "AND FD.VALUEINT = :ValueInt",
+                new MapSqlParameterSource("ValueInt", ValueInt),
                 (rs, rownum) ->
                         Optional.of(new DomainValue(rs.getString("FILEID"),
                                 rs.getString("NAME"),
@@ -45,12 +44,12 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
 
     //TODO change to return list
     @Override
-    public List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber){
+    public List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber) {
         return zevigJdbcTemplate.query(
-            "SELECT O.ORDERID, O.CLAIMCASENUMBER, O.INSPECTIONTYPEID " +
-                    "FROM [ORDER] O " +
-                    "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438) " +
-                    "AND O.CLAIMCASENUMBER = :CLAIMCASENUMBER ",
+                "SELECT O.ORDERID, O.CLAIMCASENUMBER, O.INSPECTIONTYPEID " +
+                        "FROM [ORDER] O " +
+                        "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438) " +
+                        "AND O.CLAIMCASENUMBER = :CLAIMCASENUMBER ",
                 new MapSqlParameterSource("CLAIMCASENUMBER", claimCaseNumber),
                 (rs, rownum) ->
                         Optional.of(new Order(rs.getString("ORDERID"),
@@ -61,17 +60,17 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
 
     //TODO change to return list
     @Override
-    public List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderID){
-       return wmConfigJdbcTemplate.query(
-         "SELECT IE.EPSLEADID, IEPS.EPSSERVICEID " +
-                 "FROM IDENTIFIERSEKSPERTYZAvsEPS IE, IDENTIFIERSEPSSERVICES IEPS " +
-                 "WHERE IE.EPSLEADID = IEPS.EPSLEADID " +
-                 "AND IE.EkspertyzaOrderID = :ekspertyzaOrderID",
-               new MapSqlParameterSource("ekspertyzaOrderID", ekspertyzaOrderID),
+    public List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderID) {
+        return wmConfigJdbcTemplate.query(
+                "SELECT IE.EPSLEADID, IEPS.EPSSERVICEID " +
+                        "FROM IDENTIFIERSEKSPERTYZAvsEPS IE, IDENTIFIERSEPSSERVICES IEPS " +
+                        "WHERE IE.EPSLEADID = IEPS.EPSLEADID " +
+                        "AND IE.EkspertyzaOrderID = :ekspertyzaOrderID",
+                new MapSqlParameterSource("ekspertyzaOrderID", ekspertyzaOrderID),
 
-               (rs, rownum) ->
-                       Optional.of(new Lead(rs.getString("EPSLEADID"),
-                               rs.getString("EPSSERVICEID")))
-       );
+                (rs, rownum) ->
+                        Optional.of(new Lead(rs.getString("EPSLEADID"),
+                                rs.getString("EPSSERVICEID")))
+        );
     }
 }

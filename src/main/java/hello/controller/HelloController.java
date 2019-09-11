@@ -3,10 +3,6 @@ package hello.controller;
 import hello.DependencyInjectionExample;
 import hello.config.AppConfiguration;
 import hello.config.FileConfiguration;
-import hello.jdbc.ConnectionFactory;
-import hello.jdbc.MfsConfigConnection;
-import hello.jdbc.WmConfigConnection;
-import hello.jdbc.ZevigConfigConnection;
 import hello.model.DomainValue;
 import hello.model.EPSClaim;
 import hello.model.Lead;
@@ -20,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -44,38 +39,51 @@ public class HelloController {
 
     @RequestMapping("/")
     public String index() throws SQLException {
+        importCSV();
+        findLeadsByOrderId();
+        findAttachmentsByOrderId();
+        findOrdersByClaimNumber();
+        return dependencyInjectionExample.getHelloValue();
+    }
 
-        Connection conn = connectToDbs(null);
-
-        List<Optional<DomainValue>> dom = dataRepository.findById("");
-        for (Optional<DomainValue> d : dom)
-            d.ifPresent(storageFile -> {
-                System.out.println("Storage file" + storageFile.toString());
-            });
-
-        List<Optional<Order>> order = dataRepository.findByClaimCaseNumber("");
-        for (Optional<Order> o : order)
-            o.ifPresent(ord -> {
-                System.out.println("OrderId: " + ord.toString());
-            });
-
-        List<Optional<Lead>> lead = dataRepository.findByEkspertyzaOrderId("");
-        for (Optional<Lead> l : lead)
+    public List<Optional<Lead>> findLeadsByOrderId() {
+        List<Optional<Lead>> leads = dataRepository.findByEkspertyzaOrderId("3997352");
+        for (Optional<Lead> l : leads)
             l.ifPresent(res -> {
                 System.out.println("EPSLead: " + res.toString());
             });
 
-        return dependencyInjectionExample.getHelloValue();
+        return leads;
     }
 
-    public String importCSV() {
+    public List<Optional<Order>> findOrdersByClaimNumber() {
+        List<Optional<Order>> orders = dataRepository.findByClaimCaseNumber("02/K/0010001/01");
+        for (Optional<Order> o : orders)
+            o.ifPresent(ord -> {
+                System.out.println("OrderId: " + ord.toString());
+            });
+        return orders;
+    }
+
+    public List<Optional<DomainValue>> findAttachmentsByOrderId() {
+        List<Optional<DomainValue>> dom = dataRepository.findById("3428940");
+        for (Optional<DomainValue> d : dom)
+            d.ifPresent(storageFile -> {
+                System.out.println("Storage file" + storageFile.toString());
+            });
+        return dom;
+    }
+
+    public List<EPSClaim> importCSV() {
         CSVDataLoader csvDataLoader = new CSVDataLoader();
         List<EPSClaim> claims = csvDataLoader.loadObjectList(EPSClaim.class, fileConfiguration.getFileName());
+       /* for(EPSClaim claim: claims)
+            LOGGER.info(claim.toString());*/
 
-        return claims.get(0).getAttachmentName();
+        return claims;
     }
 
-    public Connection connectToDbs(ConnectionFactory connectionFactory) throws SQLException {
+    /*public Connection connectToDbs(ConnectionFactory connectionFactory) throws SQLException {
 
         //LOGGER.info(claims.get(0).toString());
         ConnectionFactory wmConfigConnection = new WmConfigConnection();
@@ -91,7 +99,5 @@ public class HelloController {
         LOGGER.info(": " + zevigConn.isClosed());
 
         return mfsConn;
-    }
-
-
+    }*/
 }

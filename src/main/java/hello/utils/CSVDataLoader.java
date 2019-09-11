@@ -30,6 +30,8 @@ public class CSVDataLoader {
 
             File file = new ClassPathResource(filename).getFile();
             MappingIterator<T> readValues = mapper.readerFor(type).with(bootstrapSchema).readValues(file);
+            LOGGER.info("{} rows successfully loaded from {} ", readValues.readAll().size(), file.getName());
+
             return readValues.readAll();
 
         } catch (Exception e) {
