@@ -3,10 +3,7 @@ package hello.controller;
 import hello.DependencyInjectionExample;
 import hello.config.AppConfiguration;
 import hello.config.FileConfiguration;
-import hello.model.DomainValue;
-import hello.model.EPSClaim;
-import hello.model.Lead;
-import hello.model.Order;
+import hello.model.*;
 import hello.model.db.DataRepository;
 import hello.utils.CSVDataLoader;
 import org.slf4j.Logger;
@@ -17,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class HelloController {
@@ -39,11 +35,27 @@ public class HelloController {
 
     @RequestMapping("/")
     public String index() throws SQLException {
-        importCSV();
+        List<EPSClaim> epsClaims = importCSV();
+        Map<String, List<Attachment>> epsUniqueClaims = groupAttachmentsByClaim(epsClaims);
         findLeadsByOrderId();
         findAttachmentsByOrderId();
         findOrdersByClaimNumber();
         return dependencyInjectionExample.getHelloValue();
+    }
+
+    private  Map<String, List<Attachment>> groupAttachmentsByClaim(List<EPSClaim> epsClaims) {
+        List<EPSUniqueClaims> epsUniqueClaims = new ArrayList<>();
+        Map<String, List<Attachment>> groupedClaims = new HashMap<String, List<Attachment>>();
+        for (EPSClaim e : epsClaims) {
+            if (groupedClaims.containsKey(e.claimNumber))
+                groupedClaims.get(e.claimNumber).add(new Attachment(e.attachmentNumber, e.attachmentName));
+            else {
+                ArrayList<Attachment> attachment = new ArrayList<Attachment>();
+                attachment.add(new Attachment(e.attachmentNumber, e.attachmentName));
+                groupedClaims.put(e.claimNumber, attachment);
+            }
+        }
+        return groupedClaims;
     }
 
     public List<Optional<Lead>> findLeadsByOrderId() {
@@ -83,21 +95,4 @@ public class HelloController {
         return claims;
     }
 
-    /*public Connection connectToDbs(ConnectionFactory connectionFactory) throws SQLException {
-
-        //LOGGER.info(claims.get(0).toString());
-        ConnectionFactory wmConfigConnection = new WmConfigConnection();
-        ConnectionFactory zevigConfigConnection = new ZevigConfigConnection();
-        ConnectionFactory mfsConfigConnection = new MfsConfigConnection();
-
-        Connection wmConfigConn = wmConfigConnection.getConnection(appConfiguration.getWmConfigDatabaseProperties());
-        Connection mfsConn = mfsConfigConnection.getConnection(appConfiguration.getMfsDatabaseProperties());
-        Connection zevigConn = zevigConfigConnection.getConnection(appConfiguration.getZevigDatabaseProperties());
-
-        LOGGER.info(": " + wmConfigConn.isClosed());
-        LOGGER.info(": " + mfsConn.isClosed());
-        LOGGER.info(": " + zevigConn.isClosed());
-
-        return mfsConn;
-    }*/
 }

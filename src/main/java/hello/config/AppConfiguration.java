@@ -81,7 +81,6 @@ public class AppConfiguration {
         dataSource.setPassword(this.getMfsDatabaseProperties().getPassword());
         dataSource.setUrl(this.getMfsDatabaseProperties().getUrl());
 
-
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
@@ -95,7 +94,6 @@ public class AppConfiguration {
         dataSource.setPassword(this.getWmConfigDatabaseProperties().getPassword());
         dataSource.setUrl(this.getWmConfigDatabaseProperties().getUrl());
 
-
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
@@ -108,7 +106,6 @@ public class AppConfiguration {
         dataSource.setUsername(this.getZevigDatabaseProperties().getUsername());
         dataSource.setPassword(this.getZevigDatabaseProperties().getPassword());
         dataSource.setUrl(this.getZevigDatabaseProperties().getUrl());
-
 
         return new NamedParameterJdbcTemplate(dataSource);
     }

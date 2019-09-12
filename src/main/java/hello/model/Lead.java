@@ -1,6 +1,7 @@
 package hello.model;
 
 import javax.persistence.Entity;
+import java.util.Objects;
 
 @Entity
 public class Lead {
@@ -36,5 +37,19 @@ public class Lead {
                 "EPSLeadId='" + EPSLeadId + '\'' +
                 ", EPSService='" + EPSService + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lead lead = (Lead) o;
+        return EPSLeadId.equals(lead.EPSLeadId) &&
+                EPSService.equals(lead.EPSService);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EPSLeadId, EPSService);
     }
 }

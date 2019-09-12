@@ -10,6 +10,7 @@ public class Order {
     private String claimCaseNumber;
     private String inspectionTypeId;
 
+
     public Order(String orderId, String claimCaseNumber, String inspectionTypeId) {
         this.orderId = orderId;
         this.claimCaseNumber = claimCaseNumber;
