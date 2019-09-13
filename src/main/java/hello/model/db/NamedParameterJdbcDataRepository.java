@@ -48,7 +48,8 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
         return zevigJdbcTemplate.query(
                 "SELECT O.ORDERID, O.CLAIMCASENUMBER, O.INSPECTIONTYPEID " +
                         "FROM [ORDER] O " +
-                        "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438) " +
+                        "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438, " +
+                        "457) " +//to delete
                         "AND O.CLAIMCASENUMBER = :CLAIMCASENUMBER ",
                 new MapSqlParameterSource("CLAIMCASENUMBER", claimCaseNumber),
                 (rs, rownum) ->

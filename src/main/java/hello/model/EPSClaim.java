@@ -3,6 +3,7 @@ package hello.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EPSClaim {
+
     public String claimNumber;
     public String epsNumber;
     public String attachmentNumber;

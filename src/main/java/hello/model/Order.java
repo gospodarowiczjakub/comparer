@@ -2,19 +2,38 @@ package hello.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name="Order")
 public class Order {
     private String orderId;
+    private String leadId;
     private String claimCaseNumber;
     private String inspectionTypeId;
+    private List<Attachment> attachments;
 
 
     public Order(String orderId, String claimCaseNumber, String inspectionTypeId) {
         this.orderId = orderId;
         this.claimCaseNumber = claimCaseNumber;
         this.inspectionTypeId = inspectionTypeId;
+    }
+
+    public String getLeadId() {
+        return leadId;
+    }
+
+    public void setLeadId(String leadId) {
+        this.leadId = leadId;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     public String getOrderId() {

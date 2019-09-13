@@ -8,6 +8,12 @@ public class EPSUniqueClaims {
     private String EPSNumber;
     private List<Attachment> attachments;
 
+    public EPSUniqueClaims(String claimNumber, String EPSNumber, List<Attachment> attachments) {
+        this.claimNumber = claimNumber;
+        this.EPSNumber = EPSNumber;
+        this.attachments = attachments;
+    }
+
     public String getClaimNumber() {
         return claimNumber;
     }

@@ -25,12 +25,12 @@ public class CSVDataLoader {
                     .addColumn("attachmentName")
                     .addColumn("sent")
                     .setColumnSeparator(COLUMN_SEPARATOR)
+                    .setUseHeader(true)
                     .build();
             CsvMapper mapper = new CsvMapper();
 
             File file = new ClassPathResource(filename).getFile();
             MappingIterator<T> readValues = mapper.readerFor(type).with(bootstrapSchema).readValues(file);
-            LOGGER.info("{} rows successfully loaded from {} ", readValues.readAll().size(), file.getName());
 
             return readValues.readAll();
 
