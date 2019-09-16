@@ -9,6 +9,7 @@ import java.util.List;
 public class Order {
     private String orderId;
     private String leadId;
+    ///TODO deletion to verify
     private String claimCaseNumber;
     private String inspectionTypeId;
     private List<Attachment> attachments;

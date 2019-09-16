@@ -1,5 +1,6 @@
 package hello.model.db;
 
+import hello.model.Attachment;
 import hello.model.DomainValue;
 import hello.model.Lead;
 import hello.model.Order;
@@ -26,7 +27,7 @@ public interface DataRepository {
 
     List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderId);
 
-    List<Optional<DomainValue>> findById(String id);
+    List<Attachment> findById(String id);
 
     String getNameById(Long id);
 

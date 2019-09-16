@@ -1,6 +1,6 @@
 package hello.model.db;
 
-import hello.model.DomainValue;
+import hello.model.Attachment;
 import hello.model.Lead;
 import hello.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
 
     //TODO change to return list
     @Override
-    public List<Optional<DomainValue>> findById(String ValueInt) {
+    public List<Attachment> findById(String ValueInt) {
         return mfsJdbcTemplate.query(
                 "SELECT FF.FILEID, NAME, VALUEINT " +
                         "FROM FILESTORAGE_FILE FF, FILESTORAGE_DOMAINVALUEXREF FD " +
@@ -36,9 +36,9 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
                         "AND FD.VALUEINT = :ValueInt",
                 new MapSqlParameterSource("ValueInt", ValueInt),
                 (rs, rownum) ->
-                        Optional.of(new DomainValue(rs.getString("FILEID"),
-                                rs.getString("NAME"),
-                                rs.getString("VALUEINT")))
+                        (new Attachment(rs.getString("FILEID"),
+                                rs.getString("NAME")
+                               /* rs.getString("VALUEINT")*/))
         );
     }
 

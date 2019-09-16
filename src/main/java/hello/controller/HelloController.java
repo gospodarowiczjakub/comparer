@@ -41,21 +41,67 @@ public class HelloController {
 
         List<DbClaimCase> dbClaimCases = getDbClaimCases(reportEpsUniqueClaims);
 
-        List<Optional<Lead>> leads = findLeadsByOrderId(dbClaimCases.get(2).getClaimCaseNumber());
-        findAttachmentsByOrderId(dbClaimCases.get(0).getOrders().get(0).get().getOrderId());
+        for (DbClaimCase dbClaimCase : dbClaimCases)
+            addOrderParammeters(dbClaimCase);
+
+        for (DbClaimCase dbClaimCase : dbClaimCases)
+            for (Optional<Order> order : dbClaimCase.getOrders()) {
+                List<Attachment> attachments = findAttachmentsByOrderId(order.get().getOrderId());
+                order.get().setAttachments(attachments);
+            }
+
+        List<EPSUniqueClaims> dbUniqueClaims = equalizeModels(dbClaimCases);
+        compareSets(dbUniqueClaims, reportEpsUniqueClaims);
 
         return dependencyInjectionExample.getHelloValue();
     }
 
-    private List<DbClaimCase> getDbClaimCases(List<EPSUniqueClaims> epsUniqueClaims){
+    private void compareSets(List<EPSUniqueClaims> dbClaims, List<EPSUniqueClaims> reportClaims) {
+        List<EPSUniqueClaims> losenAttachments = new ArrayList<>();
+        reportClaims.removeAll(dbClaims);
+    }
+
+    private List<EPSUniqueClaims> equalizeModels(List<DbClaimCase> dbClaimCase) {
+        List<EPSUniqueClaims> dbClaims = new ArrayList<>();
+        for (DbClaimCase cc : dbClaimCase) {
+            for (Optional<Order> o : cc.getOrders()) {
+
+                dbClaims.add(new EPSUniqueClaims(cc.getClaimCaseNumber(), o.get().getLeadId(), o.get().getAttachments()));
+            }
+        }
+        return dbClaims;
+    }
+
+    private DbClaimCase addOrderParammeters(DbClaimCase dbClaimCase) {
+        try {
+            for (Optional<Order> test : dbClaimCase.getOrders()) {
+                List<Optional<Lead>> leads = findLeadsByOrderId(test.get().getOrderId());
+                test.get().setLeadId(leads.get(0).get().getEPSLeadId());
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.toString());
+        }
+        return dbClaimCase;
+    }
+
+    private List<DbClaimCase> getDbClaimCases(List<EPSUniqueClaims> epsUniqueClaims) {
         List<DbClaimCase> dbClaimCases = new ArrayList<>();
-        for(EPSUniqueClaims uniqueClaim: epsUniqueClaims)
-        {
+        for (EPSUniqueClaims uniqueClaim : epsUniqueClaims) {
             List<Optional<Order>> orders = findOrdersByClaimNumber(uniqueClaim.getClaimNumber());
-            dbClaimCases.add(new DbClaimCase(uniqueClaim.getClaimNumber(), orders));
+            DbClaimCase claimCase = new DbClaimCase(uniqueClaim.getClaimNumber(), orders);
+            dbClaimCases.add(claimCase);
+
+            try {
+                if (uniqueClaim.getAttachments().equals(claimCase.getOrders().get(0).get().getAttachments()))
+                    LOGGER.info("Attacments for {} match", uniqueClaim.getClaimNumber());
+                else
+                    LOGGER.warn("Attachments for {} don't match", uniqueClaim.getClaimNumber());
+            } catch (Exception e) {
+                LOGGER.warn("No orders for claim {}", uniqueClaim.getClaimNumber());
+            }
         }
 
-        for(DbClaimCase claim: dbClaimCases)
+        for (DbClaimCase claim : dbClaimCases)
             LOGGER.info(claim.toString());
 
         return dbClaimCases;
@@ -83,8 +129,8 @@ public class HelloController {
         return epsUniqueClaims;
     }
 
-    public List<Optional<Lead>> findLeadsByOrderId(String orderId) throws SQLException{
-        List<Optional<Lead>> leads = dataRepository.findByEkspertyzaOrderId(orderId);
+    public List<Optional<Lead>> findLeadsByOrderId(String orderId) throws SQLException {
+        List<Optional<Lead>> leads = dataRepository.findByEkspertyzaOrderId("3997352"/*orderId*/);
         for (Optional<Lead> l : leads)
             l.ifPresent(res -> {
                 System.out.println("EPSLead: " + res.toString());
@@ -103,12 +149,12 @@ public class HelloController {
         return orders;
     }
 
-    public List<Optional<DomainValue>> findAttachmentsByOrderId(String orderId) {
-        List<Optional<DomainValue>> dom = dataRepository.findById(orderId);
-        for (Optional<DomainValue> d : dom)
+    public List<Attachment> findAttachmentsByOrderId(String orderId) {
+        List<Attachment> dom = dataRepository.findById("3428886"/*orderId*/);
+        /*for (Optional<Attachment> d : dom)
             d.ifPresent(storageFile -> {
                 System.out.println("Storage file" + storageFile.toString());
-            });
+            });*/
         return dom;
     }
 

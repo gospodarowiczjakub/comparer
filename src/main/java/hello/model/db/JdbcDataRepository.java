@@ -1,5 +1,6 @@
 package hello.model.db;
 
+import hello.model.Attachment;
 import hello.model.DomainValue;
 import hello.model.Lead;
 import hello.model.Order;
@@ -53,7 +54,7 @@ public class JdbcDataRepository implements DataRepository {
     }
 
     @Override
-    public List<Optional<DomainValue>> findById(String ValueInt) {
+    public List<Attachment> findById(String ValueInt) {
 /*        return jdbcTemplate.queryForObject(
                 "select * from [dbo].[FileStorage_DomainValueXREF] where ValueInt = ?",
                 new Object[]{ValueInt},
