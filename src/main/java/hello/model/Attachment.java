@@ -40,4 +40,12 @@ public class Attachment {
     public int hashCode() {
         return Objects.hash(attachmentNumber, filename);
     }
+
+    @Override
+    public String toString() {
+        return "Attachment{" +
+                "attachmentNumber='" + attachmentNumber + '\'' +
+                ", filename='" + filename + '\'' +
+                '}';
+    }
 }

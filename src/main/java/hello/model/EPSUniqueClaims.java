@@ -38,18 +38,13 @@ public class EPSUniqueClaims {
         this.attachments = attachments;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EPSUniqueClaims that = (EPSUniqueClaims) o;
-        return Objects.equals(claimNumber, that.claimNumber) &&
-                Objects.equals(EPSNumber, that.EPSNumber) &&
-                Objects.equals(attachments, that.attachments);
-    }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(claimNumber, EPSNumber, attachments);
+    public String toString() {
+        return "EPSUniqueClaims{" +
+                "claimNumber='" + claimNumber + '\'' +
+                ", EPSNumber='" + EPSNumber + '\'' +
+                ", attachments=" + attachments.toString() +
+                '}';
     }
 }
