@@ -24,6 +24,7 @@ public class HelloController {
 
     @Autowired
     private FileConfiguration fileConfiguration;
+
     @Autowired
     @Qualifier("namedParameterJdbcDataRepository")
     private DataRepository dataRepository;
