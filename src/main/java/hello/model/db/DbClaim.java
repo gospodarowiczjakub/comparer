@@ -5,11 +5,11 @@ import hello.model.Order;
 import java.util.List;
 import java.util.Optional;
 
-public class DbClaimCase {
+public class DbClaim {
     private String claimCaseNumber;
     private List<Optional<Order>> orders;
 
-    public DbClaimCase(String claimCaseNumber, List<Optional<Order>> orders) {
+    public DbClaim(String claimCaseNumber, List<Optional<Order>> orders) {
         this.claimCaseNumber = claimCaseNumber;
         this.orders = orders;
     }

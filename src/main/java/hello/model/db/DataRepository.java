@@ -25,9 +25,9 @@ public interface DataRepository {
 
     List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber);
 
-    List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderId);
+    Optional<Lead> findLeadsByEkspertyzaOrderId(String ekspertyzaOrderId);
 
-    List<Attachment> findById(String id);
+    List<Attachment> findAttachmentsByOrderId(String id);
 
     String getNameById(Long id);
 

@@ -1,12 +1,18 @@
 package hello.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.Objects;
 
 public class Attachment {
+    @JsonProperty("attachmentNumber")
     private String attachmentNumber;
+    @JsonProperty("filename")
     private String filename;
 
-    public Attachment(String attachmentNumber, String filename) {
+    public Attachment(@JsonProperty("attachmentNumber") String attachmentNumber, @JsonProperty("filename") String filename) {
         this.attachmentNumber = attachmentNumber;
         this.filename = filename;
     }

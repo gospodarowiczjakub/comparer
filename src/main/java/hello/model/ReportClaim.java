@@ -2,7 +2,7 @@ package hello.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class EPSClaim {
+public class ReportClaim {
 
     public String claimNumber;
     public String epsNumber;
@@ -11,11 +11,11 @@ public class EPSClaim {
     public String sent;
 
 
-    public EPSClaim(@JsonProperty("claimNumber") String claimNumber,
-                    @JsonProperty("epsNumber") String epsNumber,
-                    @JsonProperty("attachmentNumber") String attachmentNumber,
-                    @JsonProperty("attachmentName") String attachmentName,
-                    @JsonProperty("sent") String sent) {
+    public ReportClaim(@JsonProperty("claimNumber") String claimNumber,
+                       @JsonProperty("epsNumber") String epsNumber,
+                       @JsonProperty("attachmentNumber") String attachmentNumber,
+                       @JsonProperty("attachmentName") String attachmentName,
+                       @JsonProperty("sent") String sent) {
         this.claimNumber = claimNumber;
         this.epsNumber = epsNumber;
         this.attachmentNumber = attachmentNumber;

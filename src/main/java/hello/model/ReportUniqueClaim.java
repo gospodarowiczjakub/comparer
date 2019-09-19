@@ -1,14 +1,22 @@
 package hello.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class EPSUniqueClaims {
+public class ReportUniqueClaim implements Serializable{
+    @JsonProperty("claimNumber")
     private String claimNumber;
+    @JsonProperty("EPSNumber")
     private String EPSNumber;
+    @JsonUnwrapped
     private List<Attachment> attachments;
 
-    public EPSUniqueClaims(String claimNumber, String EPSNumber, List<Attachment> attachments) {
+    public ReportUniqueClaim(String claimNumber, String EPSNumber, List<Attachment> attachments) {
         this.claimNumber = claimNumber;
         this.EPSNumber = EPSNumber;
         this.attachments = attachments;

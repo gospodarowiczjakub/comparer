@@ -54,7 +54,7 @@ public class JdbcDataRepository implements DataRepository {
     }
 
     @Override
-    public List<Attachment> findById(String ValueInt) {
+    public List<Attachment> findAttachmentsByOrderId(String ValueInt) {
 /*        return jdbcTemplate.queryForObject(
                 "select * from [dbo].[FileStorage_DomainValueXREF] where ValueInt = ?",
                 new Object[]{ValueInt},
@@ -72,7 +72,7 @@ public class JdbcDataRepository implements DataRepository {
     }
 
     @Override
-    public List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderId){
+    public Optional<Lead> findLeadsByEkspertyzaOrderId(String ekspertyzaOrderId){
         return null;
     }
 }

@@ -26,30 +26,26 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
     @Qualifier("zevigJdbcTemplate")
     NamedParameterJdbcTemplate zevigJdbcTemplate;
 
-    //TODO change to return list
     @Override
-    public List<Attachment> findById(String ValueInt) {
+    public List<Attachment> findAttachmentsByOrderId(String ValueInt) {
         return mfsJdbcTemplate.query(
-                "SELECT FF.FILEID, NAME, VALUEINT " +
+                "SELECT FF.FILEID, FF.NAME " +
                         "FROM FILESTORAGE_FILE FF, FILESTORAGE_DOMAINVALUEXREF FD " +
                         "WHERE FF.FILEID = FD.FILEID " +
                         "AND FD.VALUEINT = :ValueInt",
                 new MapSqlParameterSource("ValueInt", ValueInt),
                 (rs, rownum) ->
                         (new Attachment(rs.getString("FILEID"),
-                                rs.getString("NAME")
-                               /* rs.getString("VALUEINT")*/))
+                                rs.getString("NAME")))
         );
     }
 
-    //TODO change to return list
     @Override
     public List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber) {
         return zevigJdbcTemplate.query(
                 "SELECT O.ORDERID, O.CLAIMCASENUMBER, O.INSPECTIONTYPEID " +
                         "FROM [ORDER] O " +
-                        "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438, " +
-                        "457) " +//to delete
+                        "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438) " +
                         "AND O.CLAIMCASENUMBER = :CLAIMCASENUMBER ",
                 new MapSqlParameterSource("CLAIMCASENUMBER", claimCaseNumber),
                 (rs, rownum) ->
@@ -59,19 +55,17 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
         );
     }
 
-    //TODO change to return list
     @Override
-    public List<Optional<Lead>> findByEkspertyzaOrderId(String ekspertyzaOrderID) {
+    public Optional<Lead> findLeadsByEkspertyzaOrderId(String ekspertyzaOrderID) {
         return wmConfigJdbcTemplate.query(
                 "SELECT IE.EPSLEADID, IEPS.EPSSERVICEID " +
                         "FROM IDENTIFIERSEKSPERTYZAvsEPS IE, IDENTIFIERSEPSSERVICES IEPS " +
                         "WHERE IE.EPSLEADID = IEPS.EPSLEADID " +
                         "AND IE.EkspertyzaOrderID = :ekspertyzaOrderID",
                 new MapSqlParameterSource("ekspertyzaOrderID", ekspertyzaOrderID),
-
-                (rs, rownum) ->
+                (rs) ->(
                         Optional.of(new Lead(rs.getString("EPSLEADID"),
-                                rs.getString("EPSSERVICEID")))
+                                rs.getString("EPSSERVICEID"))))
         );
     }
 }

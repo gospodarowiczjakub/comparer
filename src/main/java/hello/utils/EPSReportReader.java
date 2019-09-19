@@ -2,7 +2,7 @@ package hello.utils;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import hello.model.EPSClaim;
+import hello.model.ReportClaim;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +14,9 @@ import java.util.List;
 public class EPSReportReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(EPSReportReader.class);
 
-    public static List<EPSClaim> readFile(File csvFile) {
+    public static List<ReportClaim> readFile(File csvFile) {
         try {
-            MappingIterator<EPSClaim> epsClaimMappingIterator = new CsvMapper().readerWithTypedSchemaFor(EPSClaim.class).readValues(csvFile);
+            MappingIterator<ReportClaim> epsClaimMappingIterator = new CsvMapper().readerWithTypedSchemaFor(ReportClaim.class).readValues(csvFile);
             return epsClaimMappingIterator.readAll();
         } catch (IOException e) {
             LOGGER.error("Error while loading {} file: {}", csvFile, e.toString());
