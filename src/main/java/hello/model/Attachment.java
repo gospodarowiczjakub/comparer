@@ -52,6 +52,6 @@ public class Attachment {
         return "Attachment{" +
                 "attachmentNumber='" + attachmentNumber + '\'' +
                 ", filename='" + filename + '\'' +
-                '}';
+                '}'+ System.lineSeparator();
     }
 }

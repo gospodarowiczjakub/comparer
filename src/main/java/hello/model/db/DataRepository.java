@@ -23,7 +23,7 @@ public interface DataRepository {
 
     List<DomainValue> findByNameAndPrice(String name, BigDecimal price);
 
-    List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber);
+    List<Optional<Order>> findOrdersByClaimCaseNumber(String claimCaseNumber);
 
     Optional<Lead> findLeadsByEkspertyzaOrderId(String ekspertyzaOrderId);
 

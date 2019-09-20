@@ -41,7 +41,7 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
     }
 
     @Override
-    public List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber) {
+    public List<Optional<Order>> findOrdersByClaimCaseNumber(String claimCaseNumber) {
         return zevigJdbcTemplate.query(
                 "SELECT O.ORDERID, O.CLAIMCASENUMBER, O.INSPECTIONTYPEID " +
                         "FROM [ORDER] O " +
