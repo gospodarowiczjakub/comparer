@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -51,7 +52,12 @@ public class HelloController {
         List<ReportUniqueClaim> dbUniqueClaims = equalizeModels(dbClaims);
         List<ReportUniqueClaim> losenAttachments = compareSets(dbUniqueClaims, reportUniqueClaims);
         saveResult(losenAttachments);
-        return dependencyInjectionExample.getHelloValue();
+
+        /*String result ="";
+        for(ReportUniqueClaim res: losenAttachments)
+            result = result.concat(res.toString()).concat(Systm);*/
+
+        return losenAttachments.toString();
     }
 
     private void saveResult(List<ReportUniqueClaim> losenAttachments) {
@@ -152,7 +158,7 @@ public class HelloController {
     }
 
     public List<Optional<Order>> findOrdersByClaimNumber(String claimNumber) {
-        List<Optional<Order>> orders = dataRepository.findByClaimCaseNumber(claimNumber);
+        List<Optional<Order>> orders = dataRepository.findOrdersByClaimCaseNumber(claimNumber);
         for (Optional<Order> o : orders)
             o.ifPresent(ord -> {
                 LOGGER.debug("Found  order for {}: {}", claimNumber, ord.toString());

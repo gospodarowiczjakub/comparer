@@ -49,7 +49,7 @@ public class JdbcDataRepository implements DataRepository {
     }
 
     @Override
-    public List<Optional<Order>> findByClaimCaseNumber(String claimCaseNumber) {
+    public List<Optional<Order>> findOrdersByClaimCaseNumber(String claimCaseNumber) {
         return null;
     }
 

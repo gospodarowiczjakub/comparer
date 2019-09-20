@@ -49,10 +49,10 @@ public class ReportUniqueClaim implements Serializable{
 
     @Override
     public String toString() {
-        return "EPSUniqueClaims{" +
+        return "ReportUniqueClaim{" +
                 "claimNumber='" + claimNumber + '\'' +
                 ", EPSNumber='" + EPSNumber + '\'' +
                 ", attachments=" + attachments.toString() +
-                '}';
+                "}"+System.lineSeparator();
     }
 }
