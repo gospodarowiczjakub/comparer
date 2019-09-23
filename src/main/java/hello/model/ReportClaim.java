@@ -1,13 +1,22 @@
 package hello.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.Nullable;
+
+import java.util.Objects;
 
 public class ReportClaim {
 
+    @JsonProperty("claimNumber")
     public String claimNumber;
+    @JsonProperty("epsNumber")
     public String epsNumber;
+    @JsonProperty("attachmentNumber")
     public String attachmentNumber;
+    @JsonProperty("attachmentName")
     public String attachmentName;
+    @JsonProperty("sent")
+    @Nullable
     public String sent;
 
 
@@ -21,6 +30,13 @@ public class ReportClaim {
         this.attachmentNumber = attachmentNumber;
         this.attachmentName = attachmentName;
         this.sent = sent;
+    }
+
+    public ReportClaim(String claimNumber, String epsNumber, String attachmentNumber, String attachmentName) {
+        this.claimNumber = claimNumber;
+        this.epsNumber = epsNumber;
+        this.attachmentNumber = attachmentNumber;
+        this.attachmentName = attachmentName;
     }
 
     public String getClaimNumber() {
@@ -72,6 +88,22 @@ public class ReportClaim {
                 ", attachmentName='" + attachmentName + '\'' +
                 ", sent='" + sent + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReportClaim that = (ReportClaim) o;
+        return claimNumber.equals(that.claimNumber) &&
+                epsNumber.equals(that.epsNumber) &&
+                attachmentNumber.equals(that.attachmentNumber) &&
+                attachmentName.equals(that.attachmentName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(claimNumber, epsNumber, attachmentNumber, attachmentName);
     }
 }
 

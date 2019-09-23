@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8"/>
+    <link href="/static/css/styles.css" rel="stylesheet" type="text/css"/>
+    <title>VIG - Comparer</title>
+</head>
+<body>
+<h4>Reports Comparer EPS-Ekspertyza</h4>
+<h3>Input file</h3>
+<tr th:each="row : ${inputReport}">
+    <td th:text="${row.getClaimNumber()}">1</td>
+    <td th:text="${row.getEpsNumber()}">Title ...</td>
+    <td th:text="${row.getAttachmentNumber()}">Text ...</td>
+    <td th:text="${row.getAttachmentName()}">Text ...</td>
+    <br>
+</tr>
+
+<h3>Lost attachments</h3>
+<tr th:each="attachment : ${losenAttachments}">
+    <td th:text="${attachment.getClaimNumber()}">1</td>
+    <td th:text="${attachment.getEpsNumber()}">Text ...</td>
+    <td th:text="${attachment.getAttachmentNumber()}">Text ...</td>
+    <td th:text="${attachment.getAttachmentName()}">Title ..</td>
+    <br>
+</tr>
+</body>
+</html>

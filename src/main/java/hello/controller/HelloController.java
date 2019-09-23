@@ -10,14 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.SQLException;
 import java.util.*;
 
-@RestController
+@Controller
 public class HelloController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
     private final DependencyInjectionExample dependencyInjectionExample;
@@ -33,8 +34,13 @@ public class HelloController {
         this.dependencyInjectionExample = dependencyInjectionExample;
     }
 
-    @RequestMapping("/")
-    public String index() throws SQLException {
+    @RequestMapping(value = "/")
+    public String index(){
+        return "index";
+    }
+
+    @RequestMapping(value = "compare", method = RequestMethod.GET)
+    public String compareReports(Model model) throws SQLException {
         List<ReportClaim> reportClaims = importCSVReport();
         List<ReportUniqueClaim> reportUniqueClaims = groupReportAttachmentsByClaim(reportClaims);
 
@@ -49,48 +55,53 @@ public class HelloController {
                 order.get().setAttachments(attachments);
             }
 
-        List<ReportUniqueClaim> dbUniqueClaims = equalizeModels(dbClaims);
-        List<ReportUniqueClaim> losenAttachments = compareSets(dbUniqueClaims, reportUniqueClaims);
-        saveResult(losenAttachments);
-
-        /*String result ="";
-        for(ReportUniqueClaim res: losenAttachments)
-            result = result.concat(res.toString()).concat(Systm);*/
-
-        return losenAttachments.toString();
+        List<ReportClaim> dbUniqueClaims = equalizeModels(dbClaims);
+        List<ReportClaim> losenAttachments = compareSets(dbUniqueClaims, reportClaims);
+        saveResult(losenAttachments,  fileConfiguration.getLostAttachments());
+        model.addAttribute("losenAttachments", losenAttachments);
+        model.addAttribute("inputReport", reportClaims);
+        return "losenAttachments";
     }
 
-    private void saveResult(List<ReportUniqueClaim> losenAttachments) {
-        CSVUtils.saveObjectList(losenAttachments);
+    private void saveResult(List<ReportClaim> losenAttachments, String filename) {
+        CSVUtils.saveObjectList(losenAttachments, filename);
     }
 
-    private List<ReportUniqueClaim> compareSets(List<ReportUniqueClaim> dbClaims, List<ReportUniqueClaim> reportClaims) {
-        List<ReportUniqueClaim> losenAttachments = new ArrayList<>();
+    public List<ReportClaim> compareSets(List<ReportClaim> dbClaims, List<ReportClaim> reportClaims) {
+        List<ReportClaim> losenAttachments = new ArrayList<>();
 
-        //reportClaims.removeAll(dbClaims);
+        for(ReportClaim report: reportClaims)
+        {
+            if (!dbClaims.contains(report)) {
+                losenAttachments.add(report);
+            }
+        }
+
+    /*    //reportClaims.removeAll(dbClaims);
         for (ReportUniqueClaim r : reportClaims) {
             Optional<ReportUniqueClaim> db = dbClaims.stream().filter(test -> test.getClaimNumber().equals(r.getClaimNumber())).findFirst();
             if (db.isPresent()) {
                     r.getAttachments().removeAll(db.get().getAttachments());
             }
-        }
+        }*/
 
-        for (ReportUniqueClaim r : reportClaims)
-            LOGGER.info("Losen attachments: {}", r.getAttachments());
-        return reportClaims;
+        for (ReportClaim la : losenAttachments)
+            LOGGER.info("Losen attachments: {}", la.toString());
+        return losenAttachments;
     }
 
-    private List<ReportUniqueClaim> equalizeModels(List<DbClaim> dbClaim) {
-        List<ReportUniqueClaim> dbClaims = new ArrayList<>();
+    public List<ReportClaim> equalizeModels(List<DbClaim> dbClaim) {
+        List<ReportClaim> dbClaims = new ArrayList<>();
         for (DbClaim claim : dbClaim) {
             for (Optional<Order> o : claim.getOrders()) {
-                dbClaims.add(new ReportUniqueClaim(claim.getClaimCaseNumber(), o.get().getLeadId(), o.get().getAttachments()));
+                for(Attachment a :o.get().getAttachments())
+                dbClaims.add(new ReportClaim(claim.getClaimCaseNumber(), o.get().getLeadId(), a.getAttachmentNumber(), a.getFilename()));
             }
         }
         return dbClaims;
     }
 
-    private DbClaim attachLeads(DbClaim dbClaim) {
+    public DbClaim attachLeads(DbClaim dbClaim) {
         try {
             for (Optional<Order> o : dbClaim.getOrders()) {
                 Optional<Lead> lead = findLeadsByOrderId(o.get().getOrderId());
@@ -102,7 +113,7 @@ public class HelloController {
         return dbClaim;
     }
 
-    private List<DbClaim> getDbClaimCases(List<ReportUniqueClaim> uniqueClaims) {
+    public List<DbClaim> getDbClaimCases(List<ReportUniqueClaim> uniqueClaims) {
         List<DbClaim> dbClaims = new ArrayList<>();
         for (ReportUniqueClaim uniqueClaim : uniqueClaims) {
             List<Optional<Order>> orders = findOrdersByClaimNumber(uniqueClaim.getClaimNumber());
@@ -125,7 +136,7 @@ public class HelloController {
         return dbClaims;
     }
 
-    private List<ReportUniqueClaim> groupReportAttachmentsByClaim(List<ReportClaim> reportClaims) {
+    public List<ReportUniqueClaim> groupReportAttachmentsByClaim(List<ReportClaim> reportClaims) {
         List<ReportUniqueClaim> uniqueClaims = new ArrayList<>();
         Map<String, List<Attachment>> groupedClaims = new HashMap<>();
         Map<String, String> leadsForOrders = new HashMap<>();

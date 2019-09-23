@@ -11,11 +11,22 @@ public class FileConfiguration {
     @Value("${file.inputReport}")
     private String fileName;
 
+    @Value("${file.lostAttachments}")
+    private String lostAttachments;
+
     public String getFileName() {
         return fileName;
     }
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getLostAttachments() {
+        return lostAttachments;
+    }
+
+    public void setLostAttachments(String lostAttachments) {
+        this.lostAttachments = lostAttachments;
     }
 }
