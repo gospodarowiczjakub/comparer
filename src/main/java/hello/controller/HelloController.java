@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -35,12 +35,12 @@ public class HelloController {
     }
 
     @RequestMapping(value = "/")
-    public String index(){
+    public String index() {
         return "index";
     }
 
     @RequestMapping(value = "compare", method = RequestMethod.GET)
-    public String compareReports(Model model) throws SQLException {
+    public ModelAndView compareReports(ModelAndView mav) throws SQLException {
         List<ReportClaim> reportClaims = importCSVReport();
         List<ReportUniqueClaim> reportUniqueClaims = groupReportAttachmentsByClaim(reportClaims);
 
@@ -57,33 +57,27 @@ public class HelloController {
 
         List<ReportClaim> dbUniqueClaims = equalizeModels(dbClaims);
         List<ReportClaim> losenAttachments = compareSets(dbUniqueClaims, reportClaims);
-        saveResult(losenAttachments,  fileConfiguration.getLostAttachments());
-        model.addAttribute("losenAttachments", losenAttachments);
-        model.addAttribute("inputReport", reportClaims);
-        return "losenAttachments";
+        mav.addObject("losenAttachments", losenAttachments);
+        mav.addObject("inputReport", reportClaims);
+        mav.setViewName("losenAttachments");
+        return mav;
     }
 
-    private void saveResult(List<ReportClaim> losenAttachments, String filename) {
+    @RequestMapping(value = "export", method = RequestMethod.GET)
+    private void saveResult(@RequestParam(value = "losenAttachments") ArrayList<ReportClaim> losenAttachments, @RequestParam(defaultValue = "output") String filename, ModelAndView mav) {
+
         CSVUtils.saveObjectList(losenAttachments, filename);
     }
 
-    public List<ReportClaim> compareSets(List<ReportClaim> dbClaims, List<ReportClaim> reportClaims) {
+    @ModelAttribute(name = "losenAttachments")
+    public List<ReportClaim> compareSets(@RequestParam List<ReportClaim> dbClaims,@RequestParam List<ReportClaim> reportClaims) {
         List<ReportClaim> losenAttachments = new ArrayList<>();
 
-        for(ReportClaim report: reportClaims)
-        {
+        for (ReportClaim report : reportClaims) {
             if (!dbClaims.contains(report)) {
                 losenAttachments.add(report);
             }
         }
-
-    /*    //reportClaims.removeAll(dbClaims);
-        for (ReportUniqueClaim r : reportClaims) {
-            Optional<ReportUniqueClaim> db = dbClaims.stream().filter(test -> test.getClaimNumber().equals(r.getClaimNumber())).findFirst();
-            if (db.isPresent()) {
-                    r.getAttachments().removeAll(db.get().getAttachments());
-            }
-        }*/
 
         for (ReportClaim la : losenAttachments)
             LOGGER.info("Losen attachments: {}", la.toString());
@@ -94,8 +88,8 @@ public class HelloController {
         List<ReportClaim> dbClaims = new ArrayList<>();
         for (DbClaim claim : dbClaim) {
             for (Optional<Order> o : claim.getOrders()) {
-                for(Attachment a :o.get().getAttachments())
-                dbClaims.add(new ReportClaim(claim.getClaimCaseNumber(), o.get().getLeadId(), a.getAttachmentNumber(), a.getFilename()));
+                for (Attachment a : o.get().getAttachments())
+                    dbClaims.add(new ReportClaim(claim.getClaimCaseNumber(), o.get().getLeadId(), a.getAttachmentNumber(), a.getFilename()));
             }
         }
         return dbClaims;

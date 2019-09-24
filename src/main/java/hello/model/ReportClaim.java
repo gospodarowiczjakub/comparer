@@ -19,6 +19,8 @@ public class ReportClaim {
     @Nullable
     public String sent;
 
+    public ReportClaim() {
+    }
 
     public ReportClaim(@JsonProperty("claimNumber") String claimNumber,
                        @JsonProperty("epsNumber") String epsNumber,

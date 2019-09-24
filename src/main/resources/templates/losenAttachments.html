@@ -10,6 +10,10 @@
 </head>
 <body>
 <h4>Reports Comparer EPS-Ekspertyza</h4>
+
+<form class="button" modelAttribute= ${losenAttachments} th:action="@{/export}" method="GET">
+    <input type="submit" value="Export to CSV"/>
+</form>
 <h3>Input file</h3>
 <tr th:each="row : ${inputReport}">
     <td th:text="${row.getClaimNumber()}">1</td>

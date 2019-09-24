@@ -107,7 +107,6 @@ public class ReportsComparatorTest {
 
         List<ReportClaim> result = helloController.compareSets(claimsDb, claimsReport);
         assertEquals(result.size(), 2);
-
         //assertTrue(helloController.);
     }
 }
