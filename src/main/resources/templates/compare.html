@@ -11,20 +11,20 @@
 <body>
 <h4>Reports Comparer EPS-Ekspertyza</h4>
 
-<form class="button" modelAttribute= ${losenAttachments} th:action="@{/export}" method="GET">
+<form class="button" modelAttribute= "lostAttachments" th:action="@{/saveToFile}" method="POST">
     <input type="submit" value="Export to CSV"/>
 </form>
-<h3>Input file</h3>
+<!--<h3>Input file</h3>
 <tr th:each="row : ${inputReport}">
     <td th:text="${row.getClaimNumber()}">1</td>
     <td th:text="${row.getEpsNumber()}">Title ...</td>
     <td th:text="${row.getAttachmentNumber()}">Text ...</td>
     <td th:text="${row.getAttachmentName()}">Text ...</td>
     <br>
-</tr>
+</tr>-->
 
 <h3>Lost attachments</h3>
-<tr th:each="attachment : ${losenAttachments}">
+<tr th:each="attachment : ${lostAttachments}">
     <td th:text="${attachment.getClaimNumber()}">1</td>
     <td th:text="${attachment.getEpsNumber()}">Text ...</td>
     <td th:text="${attachment.getAttachmentNumber()}">Text ...</td>

@@ -1,11 +1,12 @@
 import hello.DependencyInjectionExample;
-import hello.controller.HelloController;
+import hello.controller.MainController;
 import hello.model.Attachment;
 import hello.model.Order;
 import hello.model.ReportClaim;
 import hello.model.ReportUniqueClaim;
 import hello.model.db.DataRepository;
-import hello.model.db.NamedParameterJdbcDataRepository;
+import hello.model.db.VigJdbcDataRepository;
+import hello.service.ReportsComparer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,11 +15,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,13 +32,16 @@ public class ReportsComparatorTest {
     private DataRepository dataRepository;
 
     @Mock
-    HelloController helloController;
+    MainController mainController;
+
+    @Mock
+    ReportsComparer reportsComparer;
 
     @Test
     public void testGettingOrders() throws SQLException {
-        HelloController helloController = new HelloController(dependencyInjectionExample);
+        MainController helloController = new MainController(reportsComparer);
 
-        NamedParameterJdbcDataRepository dataRepository = mock(NamedParameterJdbcDataRepository.class);
+        VigJdbcDataRepository dataRepository = mock(VigJdbcDataRepository.class);
         ArrayList<Optional<Order>> ordersDb = new ArrayList<>();
         ordersDb.add(Optional.of(new Order("1", "claim1", "430")));
         ordersDb.add(Optional.of(new Order("2", "claim2", "430")));
@@ -59,16 +62,16 @@ public class ReportsComparatorTest {
 
     @Test
     public void testGettingAttachmentsByOrderId(){
-        HelloController helloController = new HelloController(dependencyInjectionExample);
+        MainController helloController = new MainController(reportsComparer);
 
-        NamedParameterJdbcDataRepository dataRepository = mock(NamedParameterJdbcDataRepository.class);
+        VigJdbcDataRepository dataRepository = mock(VigJdbcDataRepository.class);
         ArrayList<Optional<Order>> ordersDb = new ArrayList<>();
     }
 
     @Test
     public void testReportComparing() throws SQLException {
-        HelloController helloController = new HelloController(dependencyInjectionExample);
-        NamedParameterJdbcDataRepository dataRepository = mock(NamedParameterJdbcDataRepository.class);
+        MainController helloController = new MainController(reportsComparer);
+        VigJdbcDataRepository dataRepository = mock(VigJdbcDataRepository.class);
         spy(helloController);
         ArrayList<Optional<Order>> ordersDb = new ArrayList<>();
         ordersDb.add(Optional.of(new Order("1", "claim1", "430")));
@@ -105,7 +108,7 @@ public class ReportsComparatorTest {
         when(dataRepository.findAttachmentsByOrderId("1231")).thenReturn(attachmentsDb);
         //when(helloController.importCSVReport()).thenReturn(claims);
 
-        List<ReportClaim> result = helloController.compareSets(claimsDb, claimsReport);
+        List<ReportClaim> result = reportsComparer.compareSets(claimsDb, claimsReport);
         assertEquals(result.size(), 2);
         //assertTrue(helloController.);
     }

@@ -25,11 +25,12 @@ import java.util.List;
 public class CSVUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVUtils.class);
     private static final char COLUMN_SEPARATOR = ';';
+    private static final String DATE_PATTERN = "yyyy-MM-dd_HH-mm-ss";
 
     public static boolean saveObjectList(List<ReportClaim> type, String filename) {
         Date date = Calendar.getInstance().getTime();
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        DateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
         String strDate = dateFormat.format(date);
         File csvOutputData = new File(filename + "_" + strDate + ".csv");
 
@@ -46,7 +47,6 @@ public class CSVUtils {
 
             ObjectWriter writer = mapper
                     .configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true)
-                    //.enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE)
                     .writerFor(ReportClaim.class)
                     .with(bootstrapSchema);
             writer.writeValues(csvOutputData).writeAll(type);

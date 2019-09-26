@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
+public class VigJdbcDataRepository extends JdbcDataRepository {
     @Autowired
     @Qualifier("mfsJdbcTemplate")
     NamedParameterJdbcTemplate mfsJdbcTemplate;
@@ -43,15 +43,15 @@ public class NamedParameterJdbcDataRepository extends JdbcDataRepository {
     @Override
     public List<Optional<Order>> findOrdersByClaimCaseNumber(String claimCaseNumber) {
         return zevigJdbcTemplate.query(
-                "SELECT O.ORDERID, O.CLAIMCASENUMBER, O.INSPECTIONTYPEID " +
+                "SELECT O.ORDERID, O.CLAIMCASENUMBER " +/*, O.INSPECTIONTYPEID */
                         "FROM [ORDER] O " +
-                        "WHERE O.INSPECTIONTYPEID IN (430, 431, 432, 433, 434, 435, 436, 437, 438) " +
-                        "AND O.CLAIMCASENUMBER = :CLAIMCASENUMBER ",
+                        "WHERE O.CLAIMCASENUMBER = :CLAIMCASENUMBER " +
+                        "AND O.INSPECTIONTYPEID between 430 and 438;",
                 new MapSqlParameterSource("CLAIMCASENUMBER", claimCaseNumber),
                 (rs, rownum) ->
                         Optional.of(new Order(rs.getString("ORDERID"),
                                 rs.getString("CLAIMCASENUMBER"),
-                                rs.getString("INSPECTIONTYPEID")))
+                                null))
         );
     }
 
